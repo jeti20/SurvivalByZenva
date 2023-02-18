@@ -16,6 +16,7 @@ public class Cactus : MonoBehaviour
 
     IEnumerator DealDamage()
     {
+        // every "damageRate" seconds, damage all thingsToDamage
         while (true)
         {
             for (int i = 0; i < thingsToDamage.Count; i++)
@@ -26,16 +27,20 @@ public class Cactus : MonoBehaviour
         }
     }
 
+    // called when an object collides with the cactus
     private void OnCollisionEnter(Collision collision)
     {
+        // if it's an IDamagable, add it to the list
         if (collision.gameObject.GetComponent<IDamagable>() != null) //zwraca true, poniewa¿ Player jest damagable, czy nie mo¿e byæ null po dotkniecu kaktusa
         {
             thingsToDamage.Add(collision.gameObject.GetComponent<IDamagable>()); //dodaje do listy Idamagable 
         }
     }
 
+    // called when an object stops colliding with the cactus
     private void OnCollisionExit(Collision collision)
     {
+        // if it's an IDamagable, remove it from the list
         if (collision.gameObject.GetComponent<IDamagable>() != null)
         { 
             thingsToDamage.Remove(collision.gameObject.GetComponent<IDamagable>()); //usuwa z listy Idamagable jesli gracz przestanie dotykaæ kaktusa

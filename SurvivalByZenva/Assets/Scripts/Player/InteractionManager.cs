@@ -32,9 +32,11 @@ public class InteractionManager : MonoBehaviour
             Ray ray = cam.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0)); //znajduje œrodek ekranu, srodkowy pixel
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, maxCheckDistance, layerMask)) //sprawdza, czy trafilismy cos raycastem, o konkretnej layermask
+            if (Physics.Raycast(ray, out hit, maxCheckDistance, layerMask)) //sprawdza, czy trafilismy cos raycastem w kierunku na ktory patrzymy
             {
-                if (hit.collider.gameObject != curInteractGameObject) // jesli obiekt nie jest obiektem obecnie wybranym, to sprawia ¿e zotaje tym obiektem 
+                // is this not our current interactable?
+                // if so, set it as our current interactable
+                if (hit.collider.gameObject != curInteractGameObject) 
                 {
                     curInteractGameObject = hit.collider.gameObject;
                     curInteractable = hit.collider.GetComponent<IInteractable>();
@@ -50,14 +52,17 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
+    // called when we hover over a new interactable
     void SetPromptText()
     {
         promptText.gameObject.SetActive(true);
         promptText.text = string.Format("<b>[E]</b> {0}", curInteractable.GetInteractPrompt());
     }
 
+    // called when we press the "E" button - managed by the Input System
     public void OnInteractInput (InputAction.CallbackContext context)
     {
+        // did we press down this frame and are we hovering over an interactable?
         if (context.phase == InputActionPhase.Started && curInteractable != null) // podpiecie klawisza E jako kalwis akcji&&... sprawia zeby gra nie proboweala onterakcji jesli tam nie ma obiektu
         {
             curInteractable.OnInteract();

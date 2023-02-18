@@ -26,7 +26,7 @@ public class ItemSlotUI : MonoBehaviour
         outline.enabled = equipped;
     }
 
-    //
+    //ustawia przedmioty do wyswietlenia w slocie
     public void Set (ItemSlot slot)
     {
         curSlot = slot;
@@ -41,6 +41,7 @@ public class ItemSlotUI : MonoBehaviour
         }
     }
 
+    //czysci item slot
     public void Clear()
     {
         curSlot = null;
@@ -49,6 +50,7 @@ public class ItemSlotUI : MonoBehaviour
         quantityText.text = string.Empty;
     }
 
+    // called when we click on the slot
     public void OnButtonclick()
     {
 

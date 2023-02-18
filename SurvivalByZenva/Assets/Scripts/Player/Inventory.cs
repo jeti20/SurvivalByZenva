@@ -49,7 +49,7 @@ public class Inventory : MonoBehaviour
         inventoryWindow.SetActive(false);
         slots = new ItemSlot[uiSlots.Length];
 
-        //initialize the slots 
+        //inicializuje sloty
         for (int x = 0; x < slots.Length; x++)
         {
             slots[x] = new ItemSlot();
@@ -58,51 +58,62 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    //otwieranie i zamykanie ekwipunktu
     public void Toggle()
     {
 
     }
 
+    //sprawdza czy ekwipunek jest otwarty
     public bool IsOpen()
     {
         return inventoryWindow.activeInHierarchy;
     }
 
+    //dodaje wybrane przedmioty do ekwiputnku
     public void AddItem(ItemData item)
     {
+        //sprawdza czy przedmiot moze mbyc stackowany
+
 
     }
 
+    //spawnuje item po wyrzuceniu
     void ThrowItem (ItemData item)
     {
 
     }
 
+    //updejtuje UI ekwipunku
     void UpdateUI ()
     {
 
     }
 
+    //zwraca slot po tym jak zestackowalismy iteemki, zwraca nu;; jesli nie ma mozlowisco stackowania
     ItemSlot GetItemStack (ItemData item)
     {
         return null;
     }
 
+    // zwraca pusty slot w ekwipunku. Jesli nie ma wolnych itemkow to zwraca null
     ItemSlot GetEmptySlot ()
     {
         return null;
     }
 
+    //jest wywolywana jesli kliknie sie w item slot
     public void SelectItem (int index)
     {
 
     }
 
+    //wywolywana w momencie otwarca ekwipunku lub kiedy wybrany przedmiot jest wyczerpany
     public void ClearSelectedItemWindow ()
     {
         
     }
-
+    
     public void OnUseButton ()
     {
 
@@ -123,6 +134,7 @@ public class Inventory : MonoBehaviour
 
     }
 
+    //usuwa obecnie wybrany item
     void RemoveSeletedItem ()
     {
 
@@ -133,6 +145,7 @@ public class Inventory : MonoBehaviour
 
     }
 
+    //czy gracz ma wystarczajac ilosc itemku 
     public bool HaItems (ItemData item, int quantity)
     {
         return false;
@@ -140,6 +153,7 @@ public class Inventory : MonoBehaviour
 
 }
 
+//przechowuje informacje o slotach w ekwipunku
 public class ItemSlot
 {
     public ItemData item;

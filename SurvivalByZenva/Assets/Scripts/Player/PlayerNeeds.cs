@@ -49,6 +49,7 @@ public class PlayerNeeds : MonoBehaviour, IDamagable
         sleep.uiBar.fillAmount = sleep.GetPercentage();
     }
 
+
     public void Heal (float amount)
     {
         health.Add(amount);
@@ -93,16 +94,19 @@ public class Need
     public float decayRate;
     public Image uiBar;
 
+    // add to the need
     public void Add (float amount)
     {
         curValue = Mathf.Min(curValue + amount, maxValue); //leczac sie, hp nie bedzie wieksze niz maxValue
     }
 
+    // subtract from the need
     public void Subtract(float amount)
     {
         curValue = Mathf.Max(curValue - amount, 0.0f); //tracac hp nigdy nie bedzie mniejsze niz 0.0f
     }
 
+    // return the percentage value (0.0 - 1.0)
     public float GetPercentage()
     {
         return curValue / maxValue;

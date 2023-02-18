@@ -31,6 +31,7 @@ public class PlayerControl : MonoBehaviour
 
     private void Start()
     {
+        //znikniecie kursora przy stacie
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -47,6 +48,7 @@ public class PlayerControl : MonoBehaviour
 
     void Move()
     {
+        //liczy kierunek w odniesieniu do tego w która strone paczymy
         Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
         dir *= moveSpeed;
         dir.y = rig.velocity.y;
@@ -63,17 +65,21 @@ public class PlayerControl : MonoBehaviour
         transform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0); // os x
     }
 
+    // called when we move our mouse - managed by the Input System
     public void OnLookInput(InputAction.CallbackContext context)
     {
         mouseDelta = context.ReadValue<Vector2>();
     }
-    
+
+    // called when we press WASD - managed by the Input System
     public void onMoveInput(InputAction.CallbackContext context)
     {
+        // are we holding down a movement button?
         if (context.phase == InputActionPhase.Performed) //trzymamy klawisz/binding
         {
             curMovementInput = context.ReadValue<Vector2>();
         }
+        // have we let go of a movement button?
         else if (context.phase == InputActionPhase.Canceled) //puszczmay klawisz/banding
         {
             curMovementInput = Vector2.zero;
@@ -81,11 +87,13 @@ public class PlayerControl : MonoBehaviour
         
     }
 
-    //wywo³ywana po nacisnieciu spacji - input sytem
+    // called when we press down on the spacebar - managed by the Input System
     public void OnJumpInput(InputAction.CallbackContext context)
     {
+        // is this the first frame we're pressing the button?
         if (context.phase == InputActionPhase.Started) //isActiveAndEnabled this the first frame we are pressing the button?
         {
+            // are we standing on the ground?
             if (IsGrounded())
             {
                 rig.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
