@@ -354,9 +354,13 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/Scripts/Env/Cactus.cs"
 "Assets/Scripts/Env/DayNightCycle.cs"
+"Assets/Scripts/Items/ItemData.cs"
+"Assets/Scripts/Items/ItemObject.cs"
+"Assets/Scripts/Player/InteractionManager.cs"
 "Assets/Scripts/Player/PlayerControl.cs"
-"Assets/Scripts/PlayerNeeds.cs"
+"Assets/Scripts/Player/PlayerNeeds.cs"
 "Assets/Scripts/UI/DamageIndicator.cs"
+"Assets/Scripts/UI/ItemSlotUI.cs"
 -langversion:9.0
 
 /deterministic

@@ -54,11 +54,11 @@ public class PlayerControl : MonoBehaviour
         rig.velocity = dir;
     }
    
-    void CameraLook() //pozwala na sprawienie, ¿e kamera porusza siê góra i dó³ w okreœlonym max i min zasiêgu
+    void CameraLook() //pozwala na sprawienie, ¿e kamera porusza siê gora i dol w okreslonym max i min zasiegu
     {
         camCurXRot += mouseDelta.y * lookSensitivity;
         camCurXRot = Mathf.Clamp(camCurXRot, minXLook, maxXLook);
-        cameraContainer.localEulerAngles = new Vector3(-camCurXRot, 0, 0);  // usun "-" jesli chcemy zrobiæ ¿eby poruszanie by³o revert w osi y 
+        cameraContainer.localEulerAngles = new Vector3(-camCurXRot, 0, 0);  // usun "-" jesli chcemy zrobiv zeby poruszanie bylo revert w osi y 
 
         transform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0); // os x
     }
