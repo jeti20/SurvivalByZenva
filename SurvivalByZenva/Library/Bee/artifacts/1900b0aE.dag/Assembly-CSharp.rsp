@@ -357,6 +357,7 @@
 "Assets/Scripts/Items/ItemData.cs"
 "Assets/Scripts/Items/ItemObject.cs"
 "Assets/Scripts/Player/InteractionManager.cs"
+"Assets/Scripts/Player/Inventory.cs"
 "Assets/Scripts/Player/PlayerControl.cs"
 "Assets/Scripts/Player/PlayerNeeds.cs"
 "Assets/Scripts/UI/DamageIndicator.cs"
