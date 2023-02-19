@@ -33,12 +33,14 @@ public class ItemSlotUI : MonoBehaviour
 
         icon.gameObject.SetActive(true);
         icon.sprite = slot.item.icon;
-        quantityText.text = slot.quantity > 1 ? slot.ToString() : string.Empty; //jest quantity jest > 1 to zadzia³ slot.ToString, ale jesli warunek jest false to string empty
+        quantityText.text = slot.quantity > 1 ? slot.quantity.ToString() : string.Empty; //jest quantity jest > 1 to zadzia³ slot.ToString, ale jesli warunek jest false to string empty
 
         if (outline != null)
         {
             outline.enabled = equipped;
         }
+
+        Debug.Log("Set");
     }
 
     //czysci item slot
@@ -50,9 +52,9 @@ public class ItemSlotUI : MonoBehaviour
         quantityText.text = string.Empty;
     }
 
-    // called when we click on the slot
+    // polaczenie guzikka znajujdacego sie w kazdym slocie i umozliwienie wyswietlanie info dot. przedmiotw w eq
     public void OnButtonclick()
     {
-
+        Inventory.instance.SelectItem(index);
     }
 }

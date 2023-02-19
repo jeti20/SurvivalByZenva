@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemObject : MonoBehaviour, IInteractable
-{
+{//skrypt dodany do przemiotow interkatywnych
     public ItemData itemdata;
 
     public string GetInteractPrompt()
@@ -13,6 +13,7 @@ public class ItemObject : MonoBehaviour, IInteractable
 
     public void OnInteract()
     {
+        Inventory.instance.AddItem(itemdata);
         Destroy(gameObject);
     }
 }

@@ -3,3 +3,4 @@
 * Scriptable Objects
 * Unity Input System
 * Interfaces
+* Singleton

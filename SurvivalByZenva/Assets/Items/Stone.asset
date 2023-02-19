@@ -16,6 +16,6 @@ MonoBehaviour:
   description: A comon resource, gathered from stone.
   type: 0
   icon: {fileID: 21300000, guid: 0de37536655e56243b4e1eb38d306e34, type: 3}
-  dropPrefab: {fileID: 0}
+  dropPrefab: {fileID: 371538504751889494, guid: ed1e9f44e219e6e4eae182b776fc6ae7, type: 3}
   canStack: 1
   maxStackAmount: 12

@@ -30,6 +30,7 @@ public class Inventory : MonoBehaviour
 
     //compoents
     private PlayerControl controller;
+    private PlayerNeeds needs;
 
     [Header("Events")]
     public UnityEvent onOpeInventory; //bedzie wywolany jak otwieramy ekwipunek (wlaczenie myszki i mozliwosci obracania sie)
@@ -42,6 +43,7 @@ public class Inventory : MonoBehaviour
     {
         instance =  this;
         controller = GetComponent<PlayerControl>();
+        needs = GetComponent<PlayerNeeds>();
     }
 
     private void Start()
@@ -56,12 +58,35 @@ public class Inventory : MonoBehaviour
             uiSlots[x].index = x;
             uiSlots[x].Clear();
         }
+
+        ClearSelectedItemWindow();
+    }
+
+    public void OnInventoryButton(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started)
+        {
+            Toggle();
+        }
     }
 
     //otwieranie i zamykanie ekwipunktu
     public void Toggle()
     {
-
+        //jesli eq jest otwarty to pojawia sie myszka i blokuje obracanie sie
+        if (inventoryWindow.activeInHierarchy)
+        {
+            inventoryWindow.SetActive(false);
+            onColseInventory.Invoke();
+            controller.Togglecursor(false);
+        }
+        else
+        {
+            inventoryWindow.SetActive(true);
+            onOpeInventory.Invoke();
+            ClearSelectedItemWindow();
+            controller.Togglecursor(true);
+        }
     }
 
     //sprawdza czy ekwipunek jest otwarty
@@ -74,52 +99,171 @@ public class Inventory : MonoBehaviour
     public void AddItem(ItemData item)
     {
         //sprawdza czy przedmiot moze mbyc stackowany
+        if (item.canStack)
+        {
+            ItemSlot slotToStackTo = GetItemStack(item); //GetItemStack - szuka w ekwipunktu slota w ktorym moze zestackowac ten item
 
+            //jesli jest w ekwipunku juz przedmiot z ktorym mozna zestackowac
+            if (slotToStackTo != null)
+            {
+                slotToStackTo.quantity++;
+                UpdateUI();
+                return;
+            }
+        }
+
+        ItemSlot emptySlot = GetEmptySlot();
+
+        //jesli nie ma w ekwipunku przedmiotu z ktorym moze byc zestackowany, wiec szuka pusetgo slota i dodaje do niego 
+        if (emptySlot != null)
+        {
+            emptySlot.item = item;
+            emptySlot.quantity = 1;
+            UpdateUI();
+            return;
+        }
+
+        ThrowItem(item);
 
     }
 
     //spawnuje item po wyrzuceniu
     void ThrowItem (ItemData item)
     {
-
+        Instantiate(item.dropPrefab, dropPosition.position, Quaternion.Euler(Vector3.one * Random.value * 360.0f));
     }
 
     //updejtuje UI ekwipunku
     void UpdateUI ()
     {
-
+        for (int x = 0; x < slots.Length; x++)
+        {
+            //czy slot zawiera item, jesli tak to ustawia itemek tak jak powinien sie wyswietlac, jesli to to czysci slot
+            if (slots[x].item != null)
+            {
+                uiSlots[x].Set(slots[x]);
+            }
+            else
+            {
+                uiSlots[x].Clear();
+            }
+                
+        }
     }
 
     //zwraca slot po tym jak zestackowalismy iteemki, zwraca nu;; jesli nie ma mozlowisco stackowania
     ItemSlot GetItemStack (ItemData item)
     {
+        for (int x = 0; x < slots.Length; x++)
+        {
+            //czy przedmiot który sprawdzamy jest tym itemkiem z ktorym mozemy zestacokowac i czy nie ma juz max stack
+            if (slots[x].item == item && slots[x].quantity < item.maxStackAmount)
+            {
+                return slots[x];
+            }
+        }
+
+        //nie ma przedmiotu do stackownia w ekwipunktu
         return null;
     }
 
     // zwraca pusty slot w ekwipunku. Jesli nie ma wolnych itemkow to zwraca null
     ItemSlot GetEmptySlot ()
     {
+        for (int x = 0; x < slots.Length; x++)
+        {
+            //jesli itemek w tym slocie nie istnieje to zwracamy slot
+            if (slots[x].item == null)
+            {
+                return slots[x];
+            }
+        }
+
         return null;
     }
 
     //jest wywolywana jesli kliknie sie w item slot
     public void SelectItem (int index)
     {
+        // we can't select the slot if there's no item
+        if (slots[index].item == null)
+            return;
 
+        // set the selected item preview window
+        selectedItem = slots[index];
+        selectedItemIndex = index;
+
+        selectedItemName.text = selectedItem.item.displayName;
+        selectedItemDescription.text = selectedItem.item.description;
+
+        // set stat values and stat names
+        selectedItemStatNames.text = string.Empty;
+        selectedItemStatValues.text = string.Empty;
+
+        //leci przez np banana i jakie wlasciwosci ma wa array np. thirst i hunger
+        for (int i = 0; i < selectedItem.item.consumables.Length; i++)
+        {
+            selectedItemStatNames.text += selectedItem.item.consumables[i].type.ToString() +"\n";
+            selectedItemStatValues.text += selectedItem.item.consumables[i].value.ToString() +"\n";
+        }
+
+        useButton.SetActive(selectedItem.item.type == ItemType.Consumable);
+        equipButton.SetActive(selectedItem.item.type == ItemType.Equipable && !uiSlots[index].equipped);
+        unequipButton.SetActive(selectedItem.item.type == ItemType.Equipable && uiSlots[index].equipped);
+        dropButton.SetActive(true);
     }
 
     //wywolywana w momencie otwarca ekwipunku lub kiedy wybrany przedmiot jest wyczerpany
     public void ClearSelectedItemWindow ()
     {
-        
+        //clear the text elemetns
+        selectedItem = null;
+        selectedItemName.text = string.Empty;
+        selectedItemDescription.text = string.Empty;
+        selectedItemStatNames.text = string.Empty;
+        selectedItemStatValues.text = string.Empty;
+
+        //disable butons
+        useButton.SetActive(false);
+        equipButton.SetActive(false);
+        unequipButton.SetActive(false);
+        dropButton.SetActive(false);
     }
     
+    //przycisk use w eq
     public void OnUseButton ()
+    {
+        //spr czy item jest consumable
+        if (selectedItem.item.type == ItemType.Consumable)
+        {
+            for (int i = 0; i < selectedItem.item.consumables.Length; i++)
+            {
+                //sprawdza ktory consumable to jest, a jesli znajdzie to wywoluje konkretna funckje needs...
+                switch (selectedItem.item.consumables[i].type)
+                {
+                    case consumableType.Hunger: needs.Eat(selectedItem.item.consumables[i].value);
+                        break;
+                    case consumableType.Thirst: needs.Drinkg(selectedItem.item.consumables[i].value);
+                        break;
+                    case consumableType.Health: needs.Heal(selectedItem.item.consumables[i].value);
+                        break;
+                    case consumableType.Sleep: needs.Sleep(selectedItem.item.consumables[i].value);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        RemoveSeletedItem();
+    }
+
+    public void OnEquipButton()
     {
 
     }
 
-    public void OnEquipButton()
+    void UnEquip(int index)
     {
 
     }
@@ -129,15 +273,28 @@ public class Inventory : MonoBehaviour
         
     }
 
+    //przycisk 'drop' w w eq
     public void OnDropButton ()
     {
-
+        ThrowItem(selectedItem.item);
+        RemoveSeletedItem();
     }
 
-    //usuwa obecnie wybrany item
+    //usuwa obecnie wybrany item w eq
     void RemoveSeletedItem ()
     {
+        selectedItem.quantity--;
 
+        if(selectedItem.quantity == 0)
+        {
+            if(uiSlots[selectedItemIndex].equipped == true)
+                UnEquip(selectedItemIndex);
+
+            selectedItem.item = null;
+            ClearSelectedItemWindow();
+        }
+
+        UpdateUI();
     }
 
     public void RemoveItem (ItemData item)
@@ -146,7 +303,7 @@ public class Inventory : MonoBehaviour
     }
 
     //czy gracz ma wystarczajac ilosc itemku 
-    public bool HaItems (ItemData item, int quantity)
+    public bool HasItems (ItemData item, int quantity)
     {
         return false;
     }

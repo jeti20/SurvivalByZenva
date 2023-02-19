@@ -21,6 +21,9 @@ public class PlayerControl : MonoBehaviour
 
     private Vector2 mouseDelta;
 
+    [HideInInspector]
+    public bool canLook = true;
+
     //components
     private Rigidbody rig;
 
@@ -37,7 +40,11 @@ public class PlayerControl : MonoBehaviour
 
     private void LateUpdate()
     {
-        CameraLook();
+        if (canLook == true)
+        {
+            CameraLook();
+        }
+        
     }
 
     private void FixedUpdate()
@@ -131,5 +138,10 @@ public class PlayerControl : MonoBehaviour
         Gizmos.DrawRay(transform.position + (-transform.right * 0.2f), Vector3.down);
     }
 
-
+    //wlaczenie kursora myszy przy otwarciu eq
+    public void Togglecursor (bool toggle)
+    {
+        Cursor.lockState = toggle ? CursorLockMode.None : CursorLockMode.Locked;
+        canLook = !toggle;
+    }
 }

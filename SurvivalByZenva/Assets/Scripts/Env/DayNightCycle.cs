@@ -34,7 +34,7 @@ public class DayNightCycle : MonoBehaviour
     private void Update()
     {
 
-        Debug.Log(sun.intensity);
+        
         //plyniecie czasu
         time += timeRate * Time.deltaTime;
 

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Axe
   description: Can be used to gather wood.
-  type: 0
+  type: 1
   icon: {fileID: 21300000, guid: 40fd303def84d0b47b98b520447adfe3, type: 3}
-  dropPrefab: {fileID: 0}
+  dropPrefab: {fileID: 5664276499455967011, guid: ec64b2a81ba1ea64a88ceff845cabf33, type: 3}
   canStack: 0
   maxStackAmount: 0
