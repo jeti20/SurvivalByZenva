@@ -35,6 +35,9 @@ public class ItemData : ScriptableObject
     [Header("consumable")]
     public ItemDataConsumable[] consumables;
 
+    [Header("Equip")]
+    public GameObject equipPrefab;
+
 }
 
 [System.Serializable]

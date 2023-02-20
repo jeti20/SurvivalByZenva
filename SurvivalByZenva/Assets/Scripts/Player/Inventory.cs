@@ -260,17 +260,33 @@ public class Inventory : MonoBehaviour
 
     public void OnEquipButton()
     {
+        if (uiSlots[curEquipIndex].equipped)//curEquipIndex to index przedmiotu ktory jest obecnie wyposarzony
+        {
+            UnEquip(curEquipIndex);
+        }
+        uiSlots[selectedItemIndex].equipped = true;
+        curEquipIndex = selectedItemIndex;
+        EquipManager.instance.EquipNew(selectedItem.item);
+        UpdateUI();
 
+        SelectItem(selectedItemIndex);
     }
 
     void UnEquip(int index)
     {
+        uiSlots[index].equipped = false;
+        EquipManager.instance.UnEquip();
+        UpdateUI();
 
+        if (selectedItemIndex == index)
+        {
+            SelectItem(index);
+        }
     }
 
     public void OnUnEquipbutton()
     {
-        
+        UnEquip(selectedItemIndex);  
     }
 
     //przycisk 'drop' w w eq
