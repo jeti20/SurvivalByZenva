@@ -315,12 +315,46 @@ public class Inventory : MonoBehaviour
 
     public void RemoveItem (ItemData item)
     {
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].item == item) //czy slot zawiera item
+            {
+                slots[i].quantity--;
 
+                if (slots[i].quantity == 0) //czysci slot jestli jest rowny zero
+                {
+                    if (uiSlots[i].equipped == true)
+                    {
+                        UnEquip(i);
+
+                        slots[i].item = null;
+                        ClearSelectedItemWindow();
+                    }
+                    UpdateUI();
+                    return;
+                }
+            }
+        }
     }
+
 
     //czy gracz ma wystarczajac ilosc itemku 
     public bool HasItems (ItemData item, int quantity)
     {
+        int amount = 0;
+
+        for (int i = 0; i < slots.Length; i++)//sprawdza, czy mamy wystarczaj¹ca ilosc resources zeby wytworzyc, leic przez wyszstkie sloty, bo drewno moze byc np stakkowane w paru slotach
+        {
+            if (slots[i].item == item)
+            {
+                amount += slots[i].quantity;
+            }
+
+            if (amount >= quantity)
+            {
+                return true;
+            }
+        }
         return false;
     }
 

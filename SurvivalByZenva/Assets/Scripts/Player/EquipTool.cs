@@ -7,7 +7,7 @@ public class EquipTool : Equip
 
     public float attackRate; //jak czesto mozemy atakowac
     private bool attacking;
-    public float attackDistancel;
+    public float attackDistance;
 
     [Header("Resourec Gathering")]
     public bool doesGatherResources;
@@ -39,12 +39,27 @@ public class EquipTool : Equip
 
     void OnCanAttack()
     {
-        attacking = true;
+        attacking = false;
     }
 
     public void OnHit()
     {
-        Debug.Log("Hit Detected");
+        Ray ray = cam.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, attackDistance))
+        {
+            //did we hit Resource?
+            if (doesGatherResources && hit.collider.GetComponent<Resource>()) //sprawzdza czy uderzyliscmy obiekt z skryptem Resorce
+            {
+                hit.collider.GetComponent<Resource>().Gather(hit.point, hit.normal); //gather it
+            }
+            //did we hit damagable?
+            if (doesDealDamage && hit.collider.GetComponent<IDamagable>() != null);
+            {
+                hit.collider.GetComponent<IDamagable>().TakePhysicaldamage(damage); //deal damage
+            }
+        }
     }
 
     
