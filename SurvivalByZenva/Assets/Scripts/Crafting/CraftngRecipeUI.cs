@@ -13,7 +13,7 @@ public class CraftngRecipeUI : MonoBehaviour
     public Image[] resourceCosts;
 
     public Color canCraftColor;
-    public Color canotCraftColor;
+    public Color cannotCraftColor;
     private bool canCraft;
 
     //jesli wlaczymy craftingwindow to co ma sie dziac
@@ -36,7 +36,7 @@ public class CraftngRecipeUI : MonoBehaviour
             }
         }
 
-        backgroundImage.color = canCraft ? canCraftColor : canotCraftColor;
+        backgroundImage.color = canCraft ? canCraftColor : cannotCraftColor;
 
     }
 
